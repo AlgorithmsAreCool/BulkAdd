@@ -30,17 +30,3 @@ let GetProjectDependencies(ProjectRef  location) =
     | Rel relPath -> relPath |> Paths.toAbs pwd |> getProjectDependencies
     | Abs absPath -> absPath |> getProjectDependencies
 
-// let getPro(ProjectRef project) =
-//     //try
-
-//         let projectXml = getXml project
-
-//         let getAttrib name (node:XElement) = name |> XName.Get |> node.Attribute |> Option.ofObj
-
-//         projectXml.Descendants (XName.Get "ProjectReference")
-//         |> Seq.choose (getAttrib "Include")
-//         |> Seq.map (fun attr -> attr.Value |> Paths.toAbs projectFile |> ProjectRef)
-//         //|> Seq.map (fun attr -> attr.Value |> ProjectRef)
-//         |> Seq.toList
-//     // with
-//     // | ex -> Error ex.Message

@@ -31,14 +31,14 @@ type Builder<'node> = {
 }
 let rec private buildNode (builder) (depth) (id) =
     if Debug then
-        printfn "Building (%d) %A" depth id
+        cprintf Color.Yellow "Building (%d) %A" depth id
 
     let nodeBuilder = buildNode builder (depth + 1)
     { Id = id; Edges = List.map (nodeBuilder) (builder.GetEdges id) }
 
 let rec private visitNode (visitor : VisitorState<'node, 'state>) (node : Node<'node>)  =
     if Debug then
-        printfn "Visiting (%d) %A" visitor.Traveled id
+        cprintf Color.Yellow "Visiting (%d) %A" visitor.Traveled node.Id
 
     match Set.contains node.Id visitor.Visited with
     | true -> visitor

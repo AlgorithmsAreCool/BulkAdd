@@ -7,38 +7,43 @@ open BulkAdd.Projects
 open System
 open System.IO
 open BulkAdd.Graph
+open BulkAdd.Paths
 
 
 type StartInfo = System.Diagnostics.ProcessStartInfo
 type Process = System.Diagnostics.Process
 
-let addProject slnPath (projects: #seq<string>) =
-    for projPath in projects do
 
-        printfn"-----------------------"
-        printfn"Adding %s to %s" projPath slnPath
+let addProjectToSln slnPath (ProjectRef projectLocation) =
 
-        let command = sprintf "sln \"%s\" add \"%s\"" slnPath projPath
-        if Debug then
-            printfn "dotnet %s" command
-        if Global.WhatIfMode then
-            printfn "Not Executing in WhatIf mode"
-        else
-            try
+    let projectPath =
+        match projectLocation with
+        | Abs (AbsPath abs) -> abs
+        | Rel (RelPath rel) -> rel
 
-                    let startInfo = StartInfo()
-                    startInfo.FileName <- "dotnet"
-                    startInfo.Arguments <- command
+    printfn"-----------------------"
+    printfn"Adding %A to %s" projectPath slnPath
 
-                    let proc = Process.Start(startInfo)
-                    proc.WaitForExit()
+    let command = sprintf "sln \"%s\" add \"%s\"" slnPath projectPath
+    if Debug then
+        printfn "dotnet %s" command
+    if Global.WhatIfMode then
+        printfn "WhatIf mode, No Action Taken"
+    else
+        try
+            let startInfo = StartInfo()
+            startInfo.FileName <- "dotnet"
+            startInfo.Arguments <- command
 
-                    match proc.ExitCode with
-                    | 0 -> cprintf Color.Green "OK"
-                    | code -> cprintf Color.Yellow "Unusual Return :("
-            with
-            | _ -> ()
-        printfn"-----------------------"
+            let proc = Process.Start(startInfo)
+            proc.WaitForExit()
+
+            match proc.ExitCode with
+            | 0 -> cprintf Color.Green "OK"
+            | code -> cprintf Color.Yellow "Unusual Return :("
+        with
+        | _ -> ()
+    //printfn"-----------------------"
 
 
 [<EntryPoint>]
@@ -61,15 +66,9 @@ let main argv =
 
     let inspector = {
         State = ()
-        Inspector = fun (proj, ()) -> printfn"%A" proj
+        Inspector = fun (projectRef, ()) -> addProjectToSln argData.SolutionFile projectRef
     }
 
     Graph.Visit(originNode, inspector)
-
-    // |> Path.GetFullPath
-    // |> AbsPath
-    // |> ProjectRef
-    // |> Graph.
-    // |> addProject argData.SolutionFile
 
     0

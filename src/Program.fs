@@ -55,7 +55,7 @@ let main argv =
 
     let builder = { GetEdges = Projects.GetProjectDependencies }
 
-    let originProject = argData.ProjectFile |> Paths.toFileLocation  |> Projects.ProjectRef
+    let originProject = argData.ProjectFile |> Paths.toLocation  |> Projects.ProjectRef
 
     let originNode = Graph.Build(builder, originProject)
 

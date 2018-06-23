@@ -9,9 +9,6 @@ type Location =
 | Rel of RelPath
 | Abs of AbsPath
 
-type FileLocation = FileLocation of Location
-type DirLocation = DirLocation of Location
-
 let toAbs (AbsPath anchorPath) (RelPath relativeSegment) =
     let anchorDir = Path.GetDirectoryName(anchorPath)
     Path.Combine(anchorDir, relativeSegment) |> Path.GetFullPath |> AbsPath
@@ -26,7 +23,3 @@ let toLocation(str : string) =
     match Path.IsPathRooted(str) with
     | true -> str |> AbsPath |> Location.Abs
     | false -> str |> RelPath |> Location.Rel
-
-let toFileLocation =  toLocation >> FileLocation
-
-let toDirLocation = toLocation >> FileLocation

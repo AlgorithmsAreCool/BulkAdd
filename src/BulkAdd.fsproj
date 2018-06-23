@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Global.fs" />
+    <Compile Include="Graph.fs" />
+    <Compile Include="Paths.fs" />
+    <Compile Include="Projects.fs" />
+    <Compile Include="CommandLine.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Argu" Version="3.7.0" />
+  </ItemGroup>
+</Project>
